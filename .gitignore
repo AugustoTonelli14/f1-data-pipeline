@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Pipeline generated data (reproducible via pipeline.py)
+data/processed/*
+!data/processed/.gitkeep
+data/raw/era_snapshot/
+outputs/*.csv
+outputs/*.parquet
+logs/*
+!logs/.gitkeep
+
+# Raw data (large CSVs — download instructions in README)
+data/raw/*.csv
+
+# Keep chart outputs for portfolio display
+!outputs/charts/
+
+# Claude Code
+.claude/
