@@ -41,6 +41,3 @@ data/raw/*.csv
 
 # Keep chart outputs for portfolio display
 !outputs/charts/
-
-# Claude Code
-.claude/
