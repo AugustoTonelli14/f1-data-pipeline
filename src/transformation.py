@@ -12,9 +12,10 @@ All marts are ready for direct BI / analysis consumption.
 """
 
 import logging
-import pandas as pd
-import numpy as np
 from pathlib import Path
+
+import numpy as np
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
@@ -476,7 +477,11 @@ def save_marts(
     fmt:        str = "csv",
 ) -> None:
     """
-    Save mart DataFrames to output_dir in CSV (default) or Parquet format.
+    Save mart DataFrames to output_dir in CSV or Parquet format.
+
+    When fmt='parquet', fact_race_results is partitioned by season (year)
+    using PyArrow for efficient query pruning. All other marts are saved
+    as single Parquet files.
 
     Parameters
     ----------
@@ -484,14 +489,32 @@ def save_marts(
     output_dir : Target directory.
     fmt        : 'csv' or 'parquet'.
     """
+    import pyarrow as pa
+    import pyarrow.parquet as pq
+
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     for name, df in marts.items():
         if fmt == "parquet":
-            path = output_dir / f"{name}.parquet"
-            df.to_parquet(path, index=False)
+            if name == "fact_race_results" and "year" in df.columns:
+                # Partition fact table by season for efficient query pruning
+                part_dir = output_dir / name
+                table = pa.Table.from_pandas(df, preserve_index=False)
+                pq.write_to_dataset(
+                    table,
+                    root_path=str(part_dir),
+                    partition_cols=["year"],
+                )
+                logger.info(
+                    f"[{name}] Saved → partitioned Parquet ({len(df):,} rows, "
+                    f"{df['year'].nunique()} partitions)"
+                )
+            else:
+                path = output_dir / f"{name}.parquet"
+                df.to_parquet(path, index=False, engine="pyarrow")
+                logger.info(f"[{name}] Saved → {path.name} ({len(df):,} rows)")
         else:
             path = output_dir / f"{name}.csv"
             df.to_csv(path, index=False)
-        logger.info(f"[{name}] Saved → {path.name} ({len(df):,} rows)")
+            logger.info(f"[{name}] Saved → {path.name} ({len(df):,} rows)")

@@ -19,8 +19,8 @@ Configuration is controlled via the CONFIG dict below.
 import logging
 import sys
 import time
+from datetime import UTC, datetime
 from pathlib import Path
-from datetime import datetime, timezone
 
 # ---------------------------------------------------------------------------
 # Project root — allows running from any working directory
@@ -30,9 +30,9 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT / "src") not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from ingestion      import ingest_all_tables, filter_modern_era, save_ingested_tables
-from cleaning       import clean_all_tables,  save_cleaned_tables
-from transformation import build_all_marts,   save_marts
+from cleaning import clean_all_tables, save_cleaned_tables
+from ingestion import filter_modern_era, ingest_all_tables, save_ingested_tables
+from transformation import build_all_marts, save_marts
 
 # ---------------------------------------------------------------------------
 # Pipeline configuration
@@ -44,7 +44,7 @@ CONFIG = {
     "log_dir":        PROJECT_ROOT / "logs",
     "start_year":     2000,
     "end_year":       2024,
-    "output_format":  "csv",       # "csv" or "parquet"
+    "output_format":  "parquet",   # "csv" or "parquet"
     "validate_schema": True,
 }
 
@@ -56,7 +56,7 @@ CONFIG = {
 def setup_logging(log_dir: Path) -> logging.Logger:
     """Configure root logger to write to both console and a dated log file."""
     log_dir.mkdir(parents=True, exist_ok=True)
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
     log_file  = log_dir / f"pipeline_{timestamp}.log"
 
     fmt = logging.Formatter(

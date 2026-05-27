@@ -33,8 +33,16 @@ data/processed/*
 data/raw/era_snapshot/
 outputs/*.csv
 outputs/*.parquet
+outputs/fact_race_results/
+outputs/f1_warehouse.duckdb
+outputs/f1_dbt.duckdb
 logs/*
 !logs/.gitkeep
+
+# dbt
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
 
 # Raw data (large CSVs — download instructions in README)
 data/raw/*.csv

@@ -1,0 +1,69 @@
+version: 2
+
+models:
+  - name: stg_results
+    description: "Staged race results — one row per driver per race entry."
+    columns:
+      - name: result_id
+        tests:
+          - unique
+          - not_null
+      - name: race_id
+        tests:
+          - not_null
+      - name: driver_id
+        tests:
+          - not_null
+
+  - name: stg_drivers
+    description: "Staged driver dimension — one row per driver."
+    columns:
+      - name: driver_id
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_constructors
+    description: "Staged constructor dimension — one row per team."
+    columns:
+      - name: constructor_id
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_races
+    description: "Staged races — one row per race event."
+    columns:
+      - name: race_id
+        tests:
+          - unique
+          - not_null
+      - name: year
+        tests:
+          - not_null
+
+  - name: stg_circuits
+    description: "Staged circuit dimension — one row per track."
+    columns:
+      - name: circuit_id
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_qualifying
+    description: "Staged qualifying results — one row per driver per qualifying session."
+    columns:
+      - name: qualify_id
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_pit_stops
+    description: "Staged pit stop events — one row per pit stop."
+    columns:
+      - name: race_id
+        tests:
+          - not_null
+      - name: driver_id
+        tests:
+          - not_null

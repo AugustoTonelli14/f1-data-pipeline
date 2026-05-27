@@ -8,24 +8,22 @@ import sys
 from pathlib import Path
 
 import pandas as pd
-import numpy as np
 import pytest
 
 # Ensure src/ is importable
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from cleaning import (
-    drop_metadata_cols,
-    standardise_column_names,
-    remove_duplicates,
-    clean_results,
-    clean_drivers,
-    clean_races,
-    clean_qualifying,
-    clean_pit_stops,
     clean_all_tables,
+    clean_drivers,
+    clean_pit_stops,
+    clean_qualifying,
+    clean_races,
+    clean_results,
+    drop_metadata_cols,
+    remove_duplicates,
+    standardise_column_names,
 )
-
 
 # ---------------------------------------------------------------------------
 # Fixtures

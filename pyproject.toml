@@ -1,0 +1,43 @@
+[project]
+name = "f1-data-pipeline"
+version = "1.0.0"
+description = "End-to-end F1 data engineering pipeline — ingestion, cleaning, transformation, and analysis."
+requires-python = ">=3.11"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "SIM", # flake8-simplify
+    "RUF", # ruff-specific rules
+]
+ignore = [
+    "E501",   # line too long — handled by formatter
+    "B905",   # zip-without-strict
+    "SIM108", # ternary operator suggestion
+    "RUF001", # ambiguous unicode character (em-dash in logs)
+    "RUF002", # ambiguous unicode character in docstrings
+    "RUF003", # ambiguous unicode character in comments
+]
+
+[tool.ruff.lint.per-file-ignores]
+"src/pipeline.py" = ["E402"]      # sys.path manipulation before local imports
+"src/modeling.py" = ["E402"]      # sys.path manipulation before local imports
+"src/analysis.py" = ["E402"]      # matplotlib.use() before pyplot import
+"tests/*" = ["E402"]              # sys.path insert before local imports
+
+[tool.ruff.lint.isort]
+known-first-party = ["ingestion", "cleaning", "transformation", "pipeline"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"

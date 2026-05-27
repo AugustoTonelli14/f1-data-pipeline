@@ -1,0 +1,7 @@
+f1_pipeline:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: "../outputs/f1_dbt.duckdb"
+      threads: 4

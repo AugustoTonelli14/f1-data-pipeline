@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: mart_driver_performance
+    description: "Driver performance mart — career aggregates for drivers with 5+ race entries."
+    columns:
+      - name: driver_id
+        tests:
+          - unique
+          - not_null
+      - name: races_entered
+        tests:
+          - not_null
+      - name: points_total
+        tests:
+          - not_null
+
+  - name: mart_team_performance
+    description: "Team performance mart — one row per constructor per season."
+    columns:
+      - name: constructor_id
+        tests:
+          - not_null
+      - name: year
+        tests:
+          - not_null
+
+  - name: mart_season_overview
+    description: "Season overview — one row per season with summary metrics."
+    columns:
+      - name: year
+        tests:
+          - unique
+          - not_null
+
+  - name: mart_circuit_stats
+    description: "Circuit statistics — aggregate race metrics per track."
+    columns:
+      - name: circuit_id
+        tests:
+          - unique
+          - not_null

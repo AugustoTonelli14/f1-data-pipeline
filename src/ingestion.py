@@ -7,9 +7,10 @@ and stores a clean snapshot to data/raw/ ready for the cleaning stage.
 """
 
 import logging
-import pandas as pd
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
+
+import pandas as pd
 
 # ---------------------------------------------------------------------------
 # Logger setup
@@ -73,7 +74,7 @@ def _tag_metadata(df: pd.DataFrame, source_name: str) -> pd.DataFrame:
     """
     df = df.copy()
     df["_source"]           = source_name
-    df["_ingested_at"]      = datetime.now(timezone.utc).isoformat()
+    df["_ingested_at"]      = datetime.now(UTC).isoformat()
     return df
 
 

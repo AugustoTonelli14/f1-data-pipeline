@@ -8,18 +8,21 @@ Run this after pipeline.py has populated the outputs/ directory.
 """
 
 import warnings
+
 warnings.filterwarnings("ignore")
 
 from pathlib import Path
-import pandas as pd
-import numpy as np
+
 import matplotlib
+import numpy as np
+import pandas as pd
+
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+import matplotlib.patheffects as pe
+import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 from matplotlib.colors import LinearSegmentedColormap
-import matplotlib.patheffects as pe
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -406,14 +409,25 @@ def print_narrative_summary(drivers, teams, seasons):
 # Main entry point
 # ===========================================================================
 
+def _load_mart(name: str) -> pd.DataFrame:
+    """Load a mart from Parquet (preferred) or CSV fallback."""
+    parquet_path = OUTPUTS / f"{name}.parquet"
+    csv_path = OUTPUTS / f"{name}.csv"
+    if parquet_path.exists():
+        return pd.read_parquet(parquet_path)
+    if csv_path.exists():
+        return pd.read_csv(csv_path)
+    raise FileNotFoundError(f"Mart '{name}' not found in {OUTPUTS}")
+
+
 def main():
     """Generate all charts and print narrative insights."""
     CHARTS_DIR.mkdir(parents=True, exist_ok=True)
 
-    # Load marts
-    drivers = pd.read_csv(OUTPUTS / "driver_performance_mart.csv")
-    teams   = pd.read_csv(OUTPUTS / "team_performance_mart.csv")
-    seasons = pd.read_csv(OUTPUTS / "season_trends_mart.csv")
+    # Load marts (Parquet preferred, CSV fallback)
+    drivers = _load_mart("driver_performance_mart")
+    teams   = _load_mart("team_performance_mart")
+    seasons = _load_mart("season_trends_mart")
 
     # Generate charts
     chart_top15_drivers(drivers)

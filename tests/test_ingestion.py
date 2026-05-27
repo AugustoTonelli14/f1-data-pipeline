@@ -11,8 +11,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from ingestion import _validate_schema, _tag_metadata, filter_modern_era, EXPECTED_SCHEMAS
-
+from ingestion import EXPECTED_SCHEMAS, _tag_metadata, _validate_schema, filter_modern_era
 
 # ---------------------------------------------------------------------------
 # Tests — Schema validation
